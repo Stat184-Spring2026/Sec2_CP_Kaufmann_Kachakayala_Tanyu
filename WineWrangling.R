@@ -15,13 +15,13 @@ whiteWineData <-
 ## Step 3: Tidy the data for each type of wine----
 redWineProgress <- redWineData |>
   rename( # Add descriptive column names
-    "Fixed Acidity" = V1,
-    "Volatile Acidity" = V2,
-    "Citric Acid" = V3,
-    "Residual Sugar" = V4,
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
     "Chlorides" = V5,
-    "Free Sulfur Dioxide" = V6,
-    "Total Sulfur Dioxide" = V7,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
     "Density" = V8,
     "pH" = V9,
     "Sulphates" = V10,
@@ -34,13 +34,13 @@ redWineProgress <- redWineData |>
 
 whiteWineProgress <- whiteWineData |>
   rename(
-    "Fixed Acidity" = V1,
-    "Volatile Acidity" = V2,
-    "Citric Acid" = V3,
-    "Residual Sugar" = V4,
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
     "Chlorides" = V5,
-    "Free Sulfur Dioxide" = V6,
-    "Total Sulfur Dioxide" = V7,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
     "Density" = V8,
     "pH" = V9,
     "Sulphates" = V10,
