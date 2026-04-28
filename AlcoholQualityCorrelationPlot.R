@@ -1,6 +1,8 @@
-### Wrangling the Wine Data
+### Creating a Scatterplot Showing the Correlation Between Alcohol and Quality
 ## Step 1: Load necessary packages----
 library(tidyverse)
+library(ggpubr)
+set.seed(14)
 ## Step 2: Load the data----
 redWineData <- 
   read.csv(file = "~/Desktop/PSU/Sophomore Year Spring Semester/Stat 184/wine+quality (1)/winequality-red.csv",
@@ -52,4 +54,30 @@ whiteWineProgress <- whiteWineData |>
   )
 
 ## Step 4: Bind the dataframes for red and white wine----
-wineData <- bind_rows(redWineProgress, whiteWineProgress)
+wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
+  group_by(color) |> # Perform all subsequent operations for each color
+  slice_sample(n = 100) # Take a random sample of 100 wine samples of each color
+
+## Step 5: Create an informative plot----
+alcoholQualityPlot <- wineData |>
+  ggplot(
+    mapping = aes(
+      x = Alcohol,
+      y = Quality,
+      color = color)
+    ) + 
+ geom_jitter() +
+ geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
+ stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
+ scale_color_hue(direction = 1) +
+ labs( # Add descriptive titles and an informative subtitle and caption
+   title = "Correlation Between Alcohol Content and Quality of Wine",
+   subtitle = "Random sample of 200 wine samples with 100 of each color",
+   x = "Alcohol Content (vol.%)",
+   y = "Quality",
+   caption = "Data source: Cortez et al., 2009"
+ ) +
+ theme_minimal() +
+ theme(legend.position = "bottom") # Position the legend below the graph
+
+alcoholQualityPlot
