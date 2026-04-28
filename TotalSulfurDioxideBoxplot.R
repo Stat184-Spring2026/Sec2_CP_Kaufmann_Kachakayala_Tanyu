@@ -53,9 +53,7 @@ whiteWineProgress <- whiteWineData |>
 
 ## Step 4: Bind the dataframes for red and white wine----
 wineData <- bind_rows(redWineProgress, whiteWineProgress)
-esquisse::esquisser(
-  data = wineData
-)
+
 ## Step 5: Create the boxplot
 sulfurDioxidePlot <- ggplot(
   data = wineData,
