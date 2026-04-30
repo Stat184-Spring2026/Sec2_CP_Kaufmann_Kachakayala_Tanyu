@@ -70,8 +70,9 @@ sulfurDioxidePlot <- ggplot(
     title = "Sulfur Dioxide Concentration Based on Wine Color", # Add descriptive plot and axis titles
     x = "Wine Color",
     y = "Total Sulfur Dioxide (mg/dm^3)",
-    subtitle = "Concentrations Measured by the iLab software", # Provide context in the subtitle
+    subtitle = "Concentrations Measured by the iLab Software", # Provide context in the subtitle
     caption = "Source: Cortez et al., 2009" # Cite the data source in the caption
   ) +
   theme_bw() +
   theme(legend.position = "bottom") # Place the legend below the figure
+sulfurDioxidePlot

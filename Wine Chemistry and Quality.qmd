@@ -1,0 +1,81 @@
+---
+title: "Wine Chemistry and Correlates of Quality"
+subtitle: "Stat 184 Final Project"
+author: "Jason Kaufmann, Akshith Kachakayala, Joshua Tanyi"
+date: "May 5, 2026"
+date-modified: now
+format:
+  pdf:
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: right
+    fig-align: center
+    cap-location: top
+    link-external-newwindow: true
+    code-overflow: wrap
+execute: 
+  warning: false
+---
+
+## Introduction
+
+### Objective
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+### The Dataset
+
+Text
+
+## Wine Chemistry by Color
+
+### Similar Characteristics
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+### Stark Contrasts
+
+Text
+
+## Correlates of Quality
+
+### Strongest Predictors of Quality
+
+Text
+
+### Weakest Predictors of Quality
+
+Text
+
+### Varying Predictors of Quality by Color
+
+Text
+
+## Conclusion
+
+### Takeaways
+
+Text
+
+### Next Steps
+
+Text
+
+## Code Appendix
+
+## Conclusion
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
