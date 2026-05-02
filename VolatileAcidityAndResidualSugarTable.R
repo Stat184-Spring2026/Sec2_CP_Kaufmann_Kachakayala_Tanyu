@@ -72,19 +72,28 @@ wineSummary <- wineData |>
     medianResidualSugar = median(Residual.Sugar, na.rm = TRUE), # Compute median residual sugar concentration
     stdevResidualSugar = sd(Residual.Sugar, na.rm = TRUE), # Compute st dev for residual sugar concentration
   )
-wineSummary |>
+longWineStats <- wineSummary |>
+  rename(
+    'Color' = color, # Add descriptive column names
+    'Min Volatile Acidity (g(acetic acid/L)' = minVolatileAcidity,
+    'Max Volatile Acidity (g(acetic acid/L)' = maxVolatileAcidity,
+    'Average Volatile Acidity (g(acetic acid/L)' = avgVolatileAcidity,
+    'Median Volatile Acidity (g(acetic acid/L)' = medianVolatileAcidity,
+    'St Dev Volatile Acidity (g(acetic acid/L)'= stdevVolatileAcidity,
+    'Min Residual Sugar (g/L)' = minResidualSugar,
+    'Max Residual Sugar (g/L)'= maxResidualSugar,
+    'Average Residual Sugar (g/L)' = avgResidualSugar,
+    'Median Residual Sugar (g/L)' = medianResidualSugar,
+    'St Dev Residual Sugar (g/L)' = stdevResidualSugar
+  ) |>
+  select(-Color) |> # Remove the column containing the wine's color
+  round(3) |> # Only show three digits for each value
+  t() |> # Switch the rows and columns of the dataframe 
+  as.data.frame() |>
   knitr::kable(
     caption = 'Descriptive Statistics for Volatile Acidity and Residual Sugar Concentrations for Red and White Wine',
-    digits = 2, # Truncate values to two decimal places
-    align = 'lcccccccccc', # Align the text
-    col.names = c('Color', 'Min Volatile Acidity (g(acetic acid)/L)', 
-                  'Max Volatile Acidity (g(acetic acid)/L)', 
-                  'Average Volatile Acidity (g(acetic acid)/L)', 
-                  'Median Volatile Acidity (g(acetic acid)/L)', 
-                  'St Dev Volatile Acidity (g(acetic acid)/L)',
-                  'Min Residual Sugar (g/L)', 'Max Residual Sugar (g/L)', 
-                  'Average Residual Sugar (g/L)', 'Median Residual Sugar (g/L)', 
-                  'St Dev Residual Sugar (g/L)') # Add descriptive column names
+    align = 'lcc', # Align the text
+    col.names = c('', 'Red Wine', 'White Wine')
   ) |>
   kable_classic(
     lightable_options = 'striped' # Add light stripes to make the table more visually appealling
@@ -93,3 +102,4 @@ wineSummary |>
     general = 'Data sourced from Cortez et al., 2009',
     footnote_as_chunk = TRUE # Fit the format on one line
   )
+longWineStats
