@@ -56,17 +56,24 @@ whiteWineProgress <- whiteWineData |>
 ## Step 4: Bind the dataframes for red and white wine----
 wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
   group_by(color) |> # Perform all subsequent operations for each color
-  slice_sample(n = 100) # Take a random sample of 100 wine samples of each color
+  slice_sample(n = 1000) # Take a random sample of 100 wine samples of each color
 
 ## Step 5: Create an informative plot----
 TotalSulfurDioxideQualityPlot <- wineData |>
+  filter(
+        between(
+            Total.Sulfur.Dioxide,
+            quantile(Total.Sulfur.Dioxide, 0.25) - 1.5 * IQR(Total.Sulfur.Dioxide),
+            quantile(Total.Sulfur.Dioxide, 0.75) + 1.5 * IQR(Total.Sulfur.Dioxide)
+          )
+      ) |>
   ggplot(
     mapping = aes(
       x = Total.Sulfur.Dioxide,
       y = Quality,
       color = color)
   ) + 
-  geom_jitter() +
+  geom_jitter(alpha = 0.4, size = 0.8) +
   geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
   stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
   scale_color_hue(direction = 1) +
