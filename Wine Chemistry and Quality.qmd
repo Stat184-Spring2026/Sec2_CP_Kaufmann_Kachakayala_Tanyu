@@ -1,0 +1,285 @@
+---
+title: "Wine Chemistry and Correlates of Quality"
+subtitle: "Stat 184 Final Project"
+author: "Jason Kaufmann, Akshith Kachakayala, Joshua Tanyi"
+date: "May 5, 2026"
+date-modified: now
+format:
+  pdf:
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: right
+    fig-align: center
+    cap-location: top
+    link-external-newwindow: true
+    code-overflow: wrap
+execute: 
+  warning: false
+---
+
+## Introduction
+
+### Background
+
+Whether it be to celebrate a special occasion or relax after a long day, wine is one of the most popular and versatile beverages in the world. According to a 2019 survey of US adults, about three-quarters of Americans have a glass of wine each week, with about 44% of the US population having multiple glasses each week. Among those who reported drinking wine regularly, the most common reasons included liking the taste, viewing it as a stress reliever, enjoying it with their food, and believing that it makes them happier (Gitlin, 2019). 
+
+One common source of wine production is Vinho Verde in northwest Portugal. The region contains about 17,269 hectares of vineyards and produces about 100 million liters of wine each year (“Vinho Verde: Wines Full of Atlantic Freshness”, 2026). The popularity of wine around the world as well as the major role of Vinho Verde in the global wine market necessitate a deeper understanding of wines produced from this region.
+
+### Objective
+
+Although most people have an allegiance to either red or white wine, few are familiar with the chemical composition of either type. Our goal is to analyze how several variables relating to wine chemistry differ between red and white wine. Furthermore, we aim to find how characteristics of wine samples from the Vinho Verde region correlate to their quality, and we will identify whether this relationship changes based on the wine’s color.
+
+### The Dataset
+
+All data in this report comes from a study presented by Cortez et al. in 2009. The period of data collection was from May of 2004 to February of 2007. 1,599 samples of red wine and 4,898 samples of white wine were analyzed, with the chemical characteristics of each being determined by the iLab software. Each wine sample was tasted and evaluated by three qualified judges who rated it on a scale of one to ten (with ten being the highest quality and one being the lowest quality). These findings were summarized into two csv files: one for red wine and one for white wine (Cortez et al., 2009).
+
+## Wine Chemistry by Color
+
+### Similar Characteristics
+
+### Stark Contrasts
+
+```{r}
+#| label: fig-sulfurDioxideBoxplot
+#| fig-cap: "Boxplots showing total sulfur dioxide concentration for red and white wine samples"
+#| fig-alt: "Boxplots for total sulfur dioxide concentration show a larger interquartile range, median, and range in white wine than in red wine"
+#| fig-pos: "H"
+#| fig-width: 8
+#| echo: false
+
+### Creating a Boxplot of Total Sulfur Dioxide Concentration by Wine Color
+## Step 1: Load necessary packages----
+library(tidyverse)
+## Step 2: Load the data----
+redWineData <- 
+  read.csv(file = "~/Desktop/PSU/Sophomore Year Spring Semester/Stat 184/wine+quality (1)/winequality-red.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+whiteWineData <- 
+  read.csv(file = "~/Desktop/PSU/Sophomore Year Spring Semester/Stat 184/wine+quality (1)/winequality-white.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+## Step 3: Tidy the data for each type of wine----
+redWineProgress <- redWineData |>
+  rename( # Add descriptive column names
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as red wine
+    color = "red" 
+  )
+
+whiteWineProgress <- whiteWineData |>
+  rename(
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as white wine
+    color = "white"
+  )
+
+## Step 4: Bind the dataframes for red and white wine----
+wineData <- bind_rows(redWineProgress, whiteWineProgress)
+
+## Step 5: Create the boxplot
+sulfurDioxidePlot <- ggplot(
+  data = wineData,
+  mapping = aes(
+    x = color, # Assign color to the x-axis
+    y = Total.Sulfur.Dioxide, # Assign total sulfur dioxide to the y-axis
+    color = color)
+) +
+  geom_boxplot(aes(fill = color), notch = TRUE, outlier.alpha = 0.5, color = "#000000") +
+  # Fill each box based on the wine's color
+  # Add in notches to easily compare the medians of each box
+  # Make the outliers more transparent so that none of them are masked
+  labs(
+    title = "Sulfur Dioxide Concentration Based on Wine Color", # Add descriptive plot and axis titles
+    x = "Wine Color",
+    y = "Total Sulfur Dioxide (mg/dm^3)",
+    subtitle = "Concentrations Measured by the iLab Software", # Provide context in the subtitle
+    caption = "Source: Cortez et al., 2009" # Cite the data source in the caption
+  ) +
+  theme_bw() +
+  theme(legend.position = "bottom") # Place the legend below the figure
+sulfurDioxidePlot
+```
+
+```{r}
+#| label: tbl-vAcidityrSugar
+#| tbl-cap: "Table of descriptive statistics for volatile acidity and residual sugar concentration in red and white wine"
+#| tbl-pos: "H"
+#| html-table-processing: none
+#| echo: false
+
+### Creating a Table of Descriptive Statistics that Contrasts Red and White Wine
+## Step 1: Load necessary packages----
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(janitor)
+## Step 2: Load the data----
+redWineData <- 
+  read.csv(file = "~/Desktop/PSU/Sophomore Year Spring Semester/Stat 184/wine+quality (1)/winequality-red.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+whiteWineData <- 
+  read.csv(file = "~/Desktop/PSU/Sophomore Year Spring Semester/Stat 184/wine+quality (1)/winequality-white.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+## Step 3: Tidy the data for each type of wine----
+redWineProgress <- redWineData |>
+  rename( # Add descriptive column names
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as red wine
+    color = "red" 
+  )
+
+whiteWineProgress <- whiteWineData |>
+  rename(
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as white wine
+    color = "white"
+  )
+
+## Step 4: Bind the dataframes for red and white wine----
+wineData <- bind_rows(redWineProgress, whiteWineProgress)
+
+
+wineSummary <- wineData |>
+  group_by(color) |> # all subsequent operations will be performed for each color
+  summarise(
+    minVolatileAcidity = min(Volatile.Acidity, na.rm = TRUE), # Compute minimum volatile acidity concentration
+    maxVolatileAcidity = max(Volatile.Acidity, na.rm = TRUE), # Compute maximum volatile acidity concentration
+    avgVolatileAcidity = mean(Volatile.Acidity, na.rm = TRUE), # Compute average volatile acidity concentration
+    medianVolatileAcidity = median(Volatile.Acidity, na.rm = TRUE), # Compute median volatile acidity concentration
+    stdevVolatileAcidity = sd(Volatile.Acidity, na.rm = TRUE), # Compute st dev for volatile acidity concentration
+    minResidualSugar = min(Residual.Sugar, na.rm = TRUE), # Compute minimum residual sugar concentration
+    maxResidualSugar = max(Residual.Sugar, na.rm = TRUE), # Compute maximum residual sugar concentration
+    avgResidualSugar = mean(Residual.Sugar, na.rm = TRUE), # Compute average residual sugar concentration
+    medianResidualSugar = median(Residual.Sugar, na.rm = TRUE), # Compute median residual sugar concentration
+    stdevResidualSugar = sd(Residual.Sugar, na.rm = TRUE), # Compute st dev for residual sugar concentration
+  )
+longWineStats <- wineSummary |>
+  rename(
+    'Color' = color, # Add descriptive column names
+    'Min Volatile Acidity (g(acetic acid/L)' = minVolatileAcidity,
+    'Max Volatile Acidity (g(acetic acid/L)' = maxVolatileAcidity,
+    'Average Volatile Acidity (g(acetic acid/L)' = avgVolatileAcidity,
+    'Median Volatile Acidity (g(acetic acid/L)' = medianVolatileAcidity,
+    'St Dev Volatile Acidity (g(acetic acid/L)'= stdevVolatileAcidity,
+    'Min Residual Sugar (g/L)' = minResidualSugar,
+    'Max Residual Sugar (g/L)'= maxResidualSugar,
+    'Average Residual Sugar (g/L)' = avgResidualSugar,
+    'Median Residual Sugar (g/L)' = medianResidualSugar,
+    'St Dev Residual Sugar (g/L)' = stdevResidualSugar
+  ) |>
+  select(-Color) |> # Remove the column containing the wine's color
+  round(3) |> # Only show three digits for each value
+  t() |> # Switch the rows and columns of the dataframe 
+  as.data.frame() |>
+  knitr::kable(
+    caption = 'Descriptive Statistics for Volatile Acidity and Residual Sugar Concentrations for Red and White Wine',
+    align = 'lcc', # Align the text
+    col.names = c('', 'Red Wine', 'White Wine')
+  ) |>
+  kable_classic(
+    lightable_options = 'striped' # Add light stripes to make the table more visually appealling
+  ) |>
+  footnote( # Add a footnote describing the data source
+    general = 'Data sourced from Cortez et al., 2009',
+    footnote_as_chunk = TRUE # Fit the format on one line
+  )
+longWineStats
+```
+
+## Correlates of Quality
+
+### Strongest Predictors of Quality
+
+Text
+
+### Weakest Predictors of Quality
+
+Text
+
+### Varying Predictors of Quality by Color
+
+Text
+
+## Conclusion
+
+### Takeaways
+
+Text
+
+### Next Steps
+
+Text
+
+## Code Appendix
+
+## Conclusion
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
