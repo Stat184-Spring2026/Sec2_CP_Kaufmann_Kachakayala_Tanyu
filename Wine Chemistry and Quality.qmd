@@ -38,6 +38,7 @@ All data in this report comes from a study presented by Cortez et al. in 2009. T
 ## Wine Chemistry by Color
 
 ### Similar Characteristics
+
 #### Introduction
 Some of the measured properties from the dataset are closely similar between both red and white wines. Without close investigation and analysis, we can easily make mistakes in which type of wine we are analysing which is why we will go in detail and closely analyze similar characteristics between both wines using analytical methods.
 
@@ -190,6 +191,7 @@ ggplot(similarVisualData, aes(x = color, y = Average, fill = color)) +
   theme_minimal()
 ```
 @fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
+
 
 
 ### Stark Contrasts
@@ -396,7 +398,8 @@ longWineStats <- wineSummary |>
 longWineStats
 ```
 
-##  Correlates of Quality
+
+## Correlates of Quality
 
 ### Strongest Predictors of Quality
 
@@ -419,6 +422,7 @@ Text
 ### Next Steps
 
 Text
+
 
 ## Conclusion
 
