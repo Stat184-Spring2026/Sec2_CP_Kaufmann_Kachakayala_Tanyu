@@ -107,6 +107,19 @@ longWineStats <- wineSummary |>
   )
 longWineStats
 
+similarVisualData <- wineData |>
+  select(color, pH, Alcohol) |>
+  pivot_longer(
+    cols = c(pH, Alcohol),
+    names_to = "Characteristic",
+    values_to = "Value"
+  ) |>
+  group_by(color, Characteristic) |>
+  summarise(
+    Average = mean(Value, na.rm = TRUE),
+    .groups = "drop"
+  )
+
 # Plot showing similar values
 ggplot(similarVisualData, aes(x = color, y = Average, fill = color)) +
   geom_col() +
