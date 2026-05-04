@@ -395,10 +395,8 @@ longWineStats <- wineSummary |>
   )
 longWineStats
 ```
-```
 
-
-## Correlates of Quality
+##  Correlates of Quality
 
 ### Strongest Predictors of Quality
 
@@ -422,19 +420,16 @@ Text
 
 Text
 
-## Code Appendix
-
 ## Conclusion
 
-```{r}
-1 + 1
-```
+{{< pagebreak >}}  
 
-You can add options to executable code like this
+## Code Appendix (IMPORTANT: ECHO NEEDS TO BE SET TO TRUE BEFORE SUBMITTING. I set it to false since we're still editing the file and it will be a hassle to see such a large chunk of code in the document while editing. Edit can only be made in qmd file.)
 
 ```{r}
+#| label: codeAppend
+#| ref-label: !expr knitr::all_labels()
 #| echo: false
-2 * 2
-```
+#| eval: false
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```
