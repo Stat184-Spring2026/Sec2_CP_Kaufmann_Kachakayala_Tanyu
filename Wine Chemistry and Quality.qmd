@@ -206,67 +206,14 @@ One of the largest contrasts between the chemistry of red and white wine can be 
 #| fig-cap: "Boxplots showing total sulfur dioxide concentration for red and white wine samples"
 #| fig-alt: "Boxplots for total sulfur dioxide concentration show a larger interquartile range, median, and range in white wine than in red wine"
 #| fig-pos: "H"
-#| fig-width: 8
- 
+#| fig-width: 6
+#| echo: false
 
 ### Creating a Boxplot of Total Sulfur Dioxide Concentration by Wine Color
 ## AUTHOR: Jason Kaufmann
 ## Step 1: Load necessary packages----
 library(tidyverse)
-## Step 2: Load the data----
-redWineData <- 
-  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
-           header = FALSE,
-           sep = ";",
-           skip = 1) # Omit the first row of column titles when importing data
-whiteWineData <- 
-  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
-           header = FALSE,
-           sep = ";",
-           skip = 1) # Omit the first row of column titles when importing data
-## Step 3: Tidy the data for each type of wine----
-redWineProgress <- redWineData |>
-  rename( # Add descriptive column names
-    "Fixed.Acidity" = V1,
-    "Volatile.Acidity" = V2,
-    "Citric.Acid" = V3,
-    "Residual.Sugar" = V4,
-    "Chlorides" = V5,
-    "Free.Sulfur.Dioxide" = V6,
-    "Total.Sulfur.Dioxide" = V7,
-    "Density" = V8,
-    "pH" = V9,
-    "Sulphates" = V10,
-    "Alcohol" = V11,
-    "Quality" = V12
-  ) |>
-  mutate( # Create a column to label each sample as red wine
-    color = "red" 
-  )
-
-whiteWineProgress <- whiteWineData |>
-  rename(
-    "Fixed.Acidity" = V1,
-    "Volatile.Acidity" = V2,
-    "Citric Acid" = V3,
-    "Residual.Sugar" = V4,
-    "Chlorides" = V5,
-    "Free.Sulfur.Dioxide" = V6,
-    "Total.Sulfur.Dioxide" = V7,
-    "Density" = V8,
-    "pH" = V9,
-    "Sulphates" = V10,
-    "Alcohol" = V11,
-    "Quality" = V12
-  ) |>
-  mutate( # Create a column to label each sample as white wine
-    color = "white"
-  )
-
-## Step 4: Bind the dataframes for red and white wine----
-wineData <- bind_rows(redWineProgress, whiteWineProgress)
-
-## Step 5: Create the boxplot
+## Step 2: Create the boxplot
 sulfurDioxidePlot <- ggplot(
   data = wineData,
   mapping = aes(
@@ -306,60 +253,7 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(janitor)
-## Step 2: Load the data----
-redWineData <- 
-  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
-           header = FALSE,
-           sep = ";",
-           skip = 1) # Omit the first row of column titles when importing data
-whiteWineData <- 
-  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
-           header = FALSE,
-           sep = ";",
-           skip = 1) # Omit the first row of column titles when importing data
-## Step 3: Tidy the data for each type of wine----
-redWineProgress <- redWineData |>
-  rename( # Add descriptive column names
-    "Fixed.Acidity" = V1,
-    "Volatile.Acidity" = V2,
-    "Citric.Acid" = V3,
-    "Residual.Sugar" = V4,
-    "Chlorides" = V5,
-    "Free.Sulfur.Dioxide" = V6,
-    "Total.Sulfur.Dioxide" = V7,
-    "Density" = V8,
-    "pH" = V9,
-    "Sulphates" = V10,
-    "Alcohol" = V11,
-    "Quality" = V12
-  ) |>
-  mutate( # Create a column to label each sample as red wine
-    color = "red" 
-  )
-
-whiteWineProgress <- whiteWineData |>
-  rename(
-    "Fixed.Acidity" = V1,
-    "Volatile.Acidity" = V2,
-    "Citric.Acid" = V3,
-    "Residual.Sugar" = V4,
-    "Chlorides" = V5,
-    "Free.Sulfur.Dioxide" = V6,
-    "Total.Sulfur.Dioxide" = V7,
-    "Density" = V8,
-    "pH" = V9,
-    "Sulphates" = V10,
-    "Alcohol" = V11,
-    "Quality" = V12
-  ) |>
-  mutate( # Create a column to label each sample as white wine
-    color = "white"
-  )
-
-## Step 4: Bind the dataframes for red and white wine----
-wineData <- bind_rows(redWineProgress, whiteWineProgress)
-
-
+## Step 2: Compute the summary statistics----
 wineSummary <- wineData |>
   group_by(color) |> # all subsequent operations will be performed for each color
   summarise(
@@ -374,6 +268,7 @@ wineSummary <- wineData |>
     medianResidualSugar = median(Residual.Sugar, na.rm = TRUE), # Compute median residual sugar concentration
     stdevResidualSugar = sd(Residual.Sugar, na.rm = TRUE), # Compute st dev for residual sugar concentration
   )
+## Step 3: Render the table of summary statistics----
 longWineStats <- wineSummary |>
   rename(
     'Color' = color, # Add descriptive column names
@@ -550,8 +445,8 @@ One of the strongest predictors of wine quality that we identified is its alcoho
 #| fig-cap: "Scatterplot showing a moderate positive correlation between alcohol content and wine quality in both wine types"
 #| fig-alt: "Scatterplot showing a moderate positive correlation between alcohol content and wine quality in both wine types"
 #| fig-pos: "H"
-#| fig-width: 8
- 
+#| fig-width: 5
+#| echo: false
 
 ### Creating a Scatterplot Showing the Correlation Between Alcohol and Quality
 ## AUTHOR: Jason Kaufmann
@@ -559,57 +454,8 @@ One of the strongest predictors of wine quality that we identified is its alcoho
 library(tidyverse)
 library(ggpubr)
 set.seed(14)
-## Step 2: Load the data----
-redWineData <- 
-  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
-           header = FALSE,
-           sep = ";",
-           skip = 1) # Omit the first row of column titles when importing data
-whiteWineData <- 
-  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
-           header = FALSE,
-           sep = ";",
-           skip = 1) # Omit the first row of column titles when importing data
-## Step 3: Tidy the data for each type of wine----
-redWineProgress <- redWineData |>
-  rename( # Add descriptive column names
-    "Fixed.Acidity" = V1,
-    "Volatile.Acidity" = V2,
-    "Citric.Acid" = V3,
-    "Residual.Sugar" = V4,
-    "Chlorides" = V5,
-    "Free.Sulfur.Dioxide" = V6,
-    "Total.Sulfur.Dioxide" = V7,
-    "Density" = V8,
-    "pH" = V9,
-    "Sulphates" = V10,
-    "Alcohol" = V11,
-    "Quality" = V12
-  ) |>
-  mutate( # Create a column to label each sample as red wine
-    color = "red" 
-  )
 
-whiteWineProgress <- whiteWineData |>
-  rename(
-    "Fixed.Acidity" = V1,
-    "Volatile.Acidity" = V2,
-    "Citric.Acid" = V3,
-    "Residual.Sugar" = V4,
-    "Chlorides" = V5,
-    "Free.Sulfur.Dioxide" = V6,
-    "Total.Sulfur.Dioxide" = V7,
-    "Density" = V8,
-    "pH" = V9,
-    "Sulphates" = V10,
-    "Alcohol" = V11,
-    "Quality" = V12
-  ) |>
-  mutate( # Create a column to label each sample as white wine
-    color = "white"
-  )
-
-## Step 4: Bind the dataframes for red and white wine----
+## Step 2: Remove the outliers and take a random sample----
 wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
   filter(
     between(
@@ -621,7 +467,7 @@ wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the datafram
   group_by(color) |> # Perform all subsequent operations for each color
   slice_sample(n = 1000) # Take a random sample of 1000 wine samples of each color
 
-## Step 5: Create an informative plot----
+## Step 3: Create an informative plot----
 alcoholQualityPlot <- wineData |>
   ggplot(
     mapping = aes(
