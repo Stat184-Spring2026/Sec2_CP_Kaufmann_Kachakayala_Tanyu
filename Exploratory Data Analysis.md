@@ -1,6 +1,6 @@
 ## Exploratory Data Analysis
 ### Introduction on the topic:
-Wine is a very popular beverage enjoyed by many. Portugal is a top explorer of wine and that relates to this report because we will be analysing two types of wines originating from Portugal. The red and white vinho verde wine. To go into more detail, we will be analyzing how physio chemical properties such as the pH, density of the wine which are the input variables, affects the quality of the wine which is the sensory output variable measured on a scale of 1-10 via taste testing. The sensory measurement was obtained by wine experts.
+Wine is a very popular beverage enjoyed by many. Portugal is a top explorer of wine and that relates to this report because we will be analysing two types of wines originating from Portugal. The red and white vinho verde wine. To go into more detail, we will be analyzing how physiochemical properties such as the fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates, and alcohol which are the input variables, affects the quality of the wine which is the sensory output variable measured on a scale of 1-10 via taste testing. The sensory measurement was obtained by wine experts.
 
 ### Data Provenance:
 #### Who Collected the Data: 
