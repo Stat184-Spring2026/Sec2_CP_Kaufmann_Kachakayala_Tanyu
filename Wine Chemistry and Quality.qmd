@@ -160,6 +160,8 @@ longWineStats
 
 @tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
 
+ @tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
+ 
 ```{r}
 #| label: fig-similar-wine
 #| fig-cap: "Comparison of Mean pH and Alcohol Levels for Red and White Wine"
@@ -194,6 +196,10 @@ ggplot(similarVisualData, aes(x = color, y = Average, fill = color)) +
 ```
 
 @fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
+
+@fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
+
+
 
 ### Stark Contrasts
 
@@ -405,6 +411,7 @@ longWineStats <- wineSummary |>
 longWineStats
 ```
 
+
 ## Correlates of Quality
 
 ### Strongest Predictors of Quality
@@ -533,6 +540,10 @@ Text
 ## Conclusion
 
 {{< pagebreak >}}
+
+## Conclusion
+
+{{< pagebreak >}}  
 
 ## Code Appendix (IMPORTANT: ECHO NEEDS TO BE SET TO TRUE BEFORE SUBMITTING. I set it to false since we're still editing the file and it will be a hassle to see such a large chunk of code in the document while editing. Edit can only be made in qmd file.)
 
