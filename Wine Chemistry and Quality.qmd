@@ -307,8 +307,7 @@ longWineStats
 ## Correlates of Quality
 
 ```{r}
-
-#| label: char-correlation-table
+#| label: tbl-correlation-table
 #| tbl-cap: "Correlation Coefficient between Wine Characteristics and Quality for Red and White Wines"
 #| tbl-pos: "H"
 #| html-table-processing: none
@@ -433,8 +432,8 @@ knitr::kable(
     footnote_as_chunk = TRUE
   )
 ```
-
-To identify which chemical characteristics are most closely associated with wine quality, Correlation coefficients were calculated separately for red and white wines(see @char-correlation-table). Each coefficient measures the direction and strength of the linear relationship between a given wine characteristic and the quality rating. Prior to calculating the coefficients, outliers were removed for each characteristic using the 1.5 IQR rule, and 1,000 observations were sampled from each wine type for consistency with the scatterplot analysis. This comparison helps reveal whether the same chemical attributes are associated with quality in similar ways across red and white wines. 
+<!--Authored by Akshith Kachakayala-->
+Correlation coefficients were calculated for red and white wines (see @tbl-correlation-table) to determine which of the characteristics from the dataset associate the most with wine quality. These coefficients measure the strength of the relationship between a wine characteristic and the quality rating. Outliers were also removed using the 1.5 IQR rule, and 1,000 observations were sampled from each wine type for consistency. This comparison helps reveal whether the same attributes are associated with quality in similar ways across red and white wines. 
 
 ### Strongest Predictors of Quality
 
@@ -494,14 +493,13 @@ alcoholQualityPlot
 
 
 ### Weakest Predictors of Quality
-
-Description will be changed ----->
-One of the strongest predictors of wine quality that we identified is its alcohol content. After randomly selecting 1,000 wine samples of each color, we identified a moderate positive correlation between alcohol content and wine quality that was slightly stronger for red wine. Furthermore, each wine type had an extremely small p-value that shows the significant relationship between these two variables (see @fig-FreeSO2CorrelationPlot). One reason for this could be alcohol's role as a carrier of certain pleasurable aromas in some wines. Smells of citrus or herbs may be stronger in wines with a higher alcohol content, which could have affected the judges' assessment of its quality. A higher alcohol content has also been reported to cause a fuller, richer taste that people desire. A lower alcohol content has been linked to a lighter taste with less flavor, which is reflected in the positive correlation that we identified (Copestake, 2025).
+<!--Authored by Akshith Kachakayala-->
+We have identified that the weakest predictors of wine quality is the Free Sulfur Dioxide Content. After randomly selecting 1,000 wine samples of each color and removing outliers based off a 1.5 IQR rule, we noticed a weak correlation between alcohol content and wine quality. One possible reason could be that sulfur dioxide acts as a preservative rather than as a direct contributor to flavor. Regular levels protects wine from oxidation but extremely high or low levels may have adverse effects on taste or smell. As seen in @fig-FreeSO2CorrelationPlot, the correlation suggests that while Free Sulfur Dioxide Content can vary greatly in both wine types, the quality remains relatively stable.
 
 ```{r}
 #| label: fig-FreeSO2CorrelationPlot
-#| fig-cap: "Scatterplot showing a weak correlation between Free Sulfur Dioxide and wine quality in both wine types"
-#| fig-alt: "Scatterplot showing a weak correlation between Free Sulfur Dioxide and wine quality in both wine types"
+#| fig-cap: "Scatterplot showing a Weak Correlation between Free Sulfur Dioxide and Wine Quality in both Wine Types"
+#| fig-alt: "Scatterplot showing a Weak Correlation between Free Sulfur Dioxide and Wine Quality in both Wine Types"
 #| fig-pos: "H"
 #| fig-width: 8
  
@@ -606,8 +604,8 @@ Text
 ## Conclusion
 
 ### Takeaways
-
-Text
+<!--Authored by Akshith Kachakayala-->
+In this analysis the data shows that red and white wines have different chemical profiles. Red and white wines vary in their levels of volatile acidity plus residual sugar but they are similar in their pH and alcohol content. Alcohol is a clear factor that relates to quality for both types of wine. It is evident in this dataset that wines with more alcohol receive higher ratings for quality. By contrast free sulfur dioxide has a weak relationship with quality, because free sulfur dioxide preserves wine and makes it stable but it does not directly make wine taste or smell better. As those results indicate, one chemical feature does not determine the quality of wine. For a wine to be high quality, it must have a specific balance of many characteristics. And the effects of the characteristics are different when one compares red wines to white wines.
 
 ### Next Steps
 
