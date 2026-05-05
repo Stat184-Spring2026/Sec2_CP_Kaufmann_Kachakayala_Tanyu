@@ -1,4 +1,4 @@
-### Creating a Scatterplot Showing the Correlation Between Free Sulfur Dioxide and Quality
+### Creating a Scatterplot Showing the Correlation Between Residual Sugar and Quality
 ## Step 1: Load necessary packages----
 library(tidyverse)
 library(ggpubr)
@@ -55,36 +55,41 @@ whiteWineProgress <- whiteWineData |>
 
 ## Step 4: Bind the dataframes for red and white wine----
 wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
+  filter(
+    between(
+      Residual.Sugar,
+      quantile(Residual.Sugar, 0.25) - 1.5 * IQR(Residual.Sugar),
+      quantile(Residual.Sugar, 0.75) + 1.5 * IQR(Residual.Sugar)
+    )
+  ) |>
   group_by(color) |> # Perform all subsequent operations for each color
   slice_sample(n = 1000) # Take a random sample of 1,000 wine samples of each color
 
 ## Step 5: Create an informative plot----
-FreeSulfurDioxideQualityPlot <- wineData |>
-  filter(
-    between(
-      Free.Sulfur.Dioxide,
-      quantile(Free.Sulfur.Dioxide, 0.25) - 1.5 * IQR(Free.Sulfur.Dioxide),
-      quantile(Free.Sulfur.Dioxide, 0.75) + 1.5 * IQR(Free.Sulfur.Dioxide)
-    )
-  ) |>
+ResugarPlot <- wineData |>
+  
   ggplot(
     mapping = aes(
-      x = Free.Sulfur.Dioxide,
+      x = Residual.Sugar,
       y = Quality,
       color = color)
   ) + 
-  geom_jitter(alpha = 0.4, size = 0.7) +
+  geom_jitter(
+    alpha = 0.4, 
+    size = 0.7
+  ) +
   geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
   stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
   scale_color_hue(direction = 1) +
   labs( # Add descriptive titles and an informative subtitle and caption
-    title = "Correlation Between Free Sulfur Dioxide Concentration and Quality of Wine",
+    title = "Correlation Between Residual Sugar and Quality of Wine",
     subtitle = "Random sample of 2,000 wine samples with 1,000 of each color",
-    x = expression("Free Sulfur Dioxide Concentration (mg/dm"^3*")"),
+    x = "Residual Sugar(g/dm3)",
     y = "Quality",
-    caption = "Data source: Cortez et al., 2009"
+    caption = "Data source: Cortez et al., 2009",
+    alt = "Scatterplot of wine samples showing the relationship between Residual sugar and quality."
   ) +
   theme_minimal() +
   theme(legend.position = "bottom") # Position the legend below the graph
 
-FreeSulfurDioxideQualityPlot
+ResugarPlot

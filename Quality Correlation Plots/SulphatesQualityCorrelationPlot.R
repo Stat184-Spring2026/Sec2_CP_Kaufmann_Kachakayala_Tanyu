@@ -1,16 +1,16 @@
-### Creating a Scatterplot Showing the Correlation Between Volatile Acidity and Quality
+### Creating a Scatterplot Showing the Correlation Between Sulphates and Quality
 ## Step 1: Load necessary packages----
 library(tidyverse)
 library(ggpubr)
 set.seed(14)
 ## Step 2: Load the data----
 redWineData <- 
-  read.csv(file = "~/Desktop/wine+quality/winequality-red.csv",
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
            header = FALSE,
            sep = ";",
            skip = 1) # Omit the first row of column titles when importing data
 whiteWineData <- 
-  read.csv(file = "~/Desktop/wine+quality/winequality-white.csv",
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
            header = FALSE,
            sep = ";",
            skip = 1) # Omit the first row of column titles when importing data
@@ -55,33 +55,37 @@ whiteWineProgress <- whiteWineData |>
 
 ## Step 4: Bind the dataframes for red and white wine----
 wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
+  filter(
+    between(
+      Sulphates,
+      quantile(Sulphates, 0.25) - 1.5 * IQR(Sulphates),
+      quantile(Sulphates, 0.75) + 1.5 * IQR(Sulphates)
+    )
+  ) |>
   group_by(color) |> # Perform all subsequent operations for each color
-  slice_sample(n = 1000) # Take a random sample of 100 wine samples of each color
+  slice_sample(n = 1000) # Take a random sample of 1000 wine samples of each color
+
 
 ## Step 5: Create an informative plot----
-ResugarPlot <- wineData |>
+sulphatesQualityPlot <- wineData |>
   ggplot(
     mapping = aes(
-      x = Residual.Sugar,
+      x = Sulphates,
       y = Quality,
       color = color)
   ) + 
-  geom_jitter(
-    alpha = 0.4, 
-    size = 0.8
-  ) +
+  geom_jitter(alpha = 0.4, size = 0.7) +
   geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
   stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
   scale_color_hue(direction = 1) +
   labs( # Add descriptive titles and an informative subtitle and caption
-    title = "Correlation Between Residual Sugar and Quality of Wine",
-    subtitle = "Random sample of 200 wine samples with 100 of each color",
-    x = "Residual Sugar(g/dm3)",
+    title = "Correlation Between Sulphate Concentration and Quality of Wine",
+    subtitle = "Random sample of 2,000 wine samples with 1,000 of each color",
+    x = "Sulphate Concentration (g(potassium sulphate)/dm3)",
     y = "Quality",
-    caption = "Data source: Cortez et al., 2009",
-    alt = "Scatterplot of wine samples showing the relationship between Residual sugar and quality."
+    caption = "Data source: Cortez et al., 2009"
   ) +
   theme_minimal() +
   theme(legend.position = "bottom") # Position the legend below the graph
 
-ResugarPlot
+sulphatesQualityPlot
