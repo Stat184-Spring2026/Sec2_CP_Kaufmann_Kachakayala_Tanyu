@@ -55,11 +55,6 @@ whiteWineProgress <- whiteWineData |>
 
 ## Step 4: Bind the dataframes for red and white wine----
 wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
-  group_by(color) |> # Perform all subsequent operations for each color
-  slice_sample(n = 1000) # Take a random sample of 1,000 wine samples of each color
-
-## Step 5: Create an informative plot----
-FixedAcidityQualityPlot <- wineData |>
   filter(
     between(
       Fixed.Acidity,
@@ -67,6 +62,12 @@ FixedAcidityQualityPlot <- wineData |>
       quantile(Fixed.Acidity, 0.75) + 1.5 * IQR(Fixed.Acidity)
     )
   ) |>
+  group_by(color) |> # Perform all subsequent operations for each color
+  slice_sample(n = 1000) # Take a random sample of 1,000 wine samples of each color
+
+## Step 5: Create an informative plot----
+FixedAcidityQualityPlot <- wineData |>
+
   ggplot(
     mapping = aes(
       x = Fixed.Acidity,

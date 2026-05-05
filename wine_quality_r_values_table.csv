@@ -1,0 +1,12 @@
+"characteristic","r_red","r_white"
+"Fixed.Acidity",0.02,-0.119
+"Volatile.Acidity",-0.307,-0.194
+"Citric.Acid",0.218,0.043
+"Residual.Sugar",-0.029,-0.071
+"Chlorides",-0.193,-0.307
+"Free.Sulfur.Dioxide",-0.022,0.053
+"Total.Sulfur.Dioxide",-0.216,-0.103
+"Density",-0.187,-0.334
+"pH",-0.065,0.135
+"Sulphates",0.394,0.023
+"Alcohol",0.472,0.406

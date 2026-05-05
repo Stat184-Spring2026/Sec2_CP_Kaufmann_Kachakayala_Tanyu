@@ -1,4 +1,4 @@
-### Creating a Scatterplot Showing the Correlation Between Total Sulfur Dioxide and Quality
+### Creating a Scatterplot Showing the Correlation Between Citric Acid and Quality
 ## Step 1: Load necessary packages----
 library(tidyverse)
 library(ggpubr)
@@ -55,21 +55,22 @@ whiteWineProgress <- whiteWineData |>
 
 ## Step 4: Bind the dataframes for red and white wine----
 wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
+  filter(
+    between(
+      Citric.Acid,
+      quantile(Citric.Acid, 0.25) - 1.5 * IQR(Citric.Acid),
+      quantile(Citric.Acid, 0.75) + 1.5 * IQR(Citric.Acid)
+    )
+  ) |>
   group_by(color) |> # Perform all subsequent operations for each color
   slice_sample(n = 1000) # Take a random sample of 1000 wine samples of each color
 
 ## Step 5: Create an informative plot----
-TotalSulfurDioxideQualityPlot <- wineData |>
-  filter(
-        between(
-            Total.Sulfur.Dioxide,
-            quantile(Total.Sulfur.Dioxide, 0.25) - 1.5 * IQR(Total.Sulfur.Dioxide),
-            quantile(Total.Sulfur.Dioxide, 0.75) + 1.5 * IQR(Total.Sulfur.Dioxide)
-          )
-      ) |>
+CitricAcidQualityPlot <- wineData |>
+  
   ggplot(
     mapping = aes(
-      x = Total.Sulfur.Dioxide,
+      x = Citric.Acid,
       y = Quality,
       color = color)
   ) + 
@@ -78,13 +79,13 @@ TotalSulfurDioxideQualityPlot <- wineData |>
   stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
   scale_color_hue(direction = 1) +
   labs( # Add descriptive titles and an informative subtitle and caption
-    title = "Correlation Between Total Sulfur Dioxide Concentration and Quality of Wine",
+    title = "Correlation Between Citric Acid Concentration and Quality of Wine",
     subtitle = "Random sample of 2,000 wine samples with 1,000 of each color",
-    x = expression("Total Sulfur Dioxide Concentration (mg/dm"^3*")"),
+    x = expression("Citric Acid Concentration (g/dm"^3*")"),
     y = "Quality",
     caption = "Data source: Cortez et al., 2009"
   ) +
   theme_minimal() +
   theme(legend.position = "bottom") # Position the legend below the graph
 
-TotalSulfurDioxideQualityPlot
+CitricAcidQualityPlot
