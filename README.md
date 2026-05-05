@@ -1,28 +1,23 @@
-# Project Title.
+# Investigating Wine Chemistry and Quality by Color
 
-Write a 1-2 sentences that quickly and clearly convey what your repo is for.
+This repository contains a report with two main objectives: comparing the chemical composition of red and white wine as well as investigating which variables are correlated with wine quality.
 
 ## Overview
 
-Expand on those introductory sentences with a brief but informative description of your project's purpose and goals. This section should help visitors decide whether they should dig deeper into your repo/project.
-
-### Interesting Insight (Optional)
-
-This is optional but highly recommended. You'll include one interesting insight from your project as part of the README. This insight is most effective when you include a visual. Keep in mind that this visual must be included as an image file (e.g., JPG, PNG, etc.). You can export plots created with `{ggplot2}` by using the function `ggsave`.
+The first goal of this repository is to take an in-depth look at the chemistry of both wine types by analyzing variables such as sulfur dioxide and volatile acidity. Section 2 provides a few examples of characteristics that are very similar between both types before providing examples of how they differ. Section 3 examines the correlation between these variables and a sample’s quality (as evaluated by three qualified judges) and how this relationship changes based on the wine’s color. Section 4 summarizes our findings and provides opportunities for future analysis.
 
 ## Data Sources and Acknowledgements
 
-Be sure to list where you got any data used within the project. Be sure to acknowledge any one whose work or elements you're drawing upon.
+Data for both red and white wine come from Cortez et al., 2009. This group of researchers measured the chemical composition of all samples using the iLab software.
 
 ## Current Plan
 
-Provide some information about what you intend to do with the project. You can additionally refer the visitor to your detailed plan document.
+To achieve the goals mentioned above, we will first combine the csv files for red and white wine into a single tidy dataframe. We will then create informative plots and tables to compare their chemical makeups and the factors that affect their quality. For the full plan containing goals, needs, and steps, please see the planning document in the main branch for more information.
 
 ## Repo Structure
 
-Use this section to explain the structure of your repo. This should help visitors quickly figure out where they should look to find certain elements. Further, you can use this space to highlight and briefly explain important/key files in the repo.
-
+This repo is traditional in its structure. All relevant files are housed in the main branch with a folder included that houses all relevant images.
 
 ## Authors
 
-Give information about who are the authors of the project and how people can get in touch if they have questions.
+The authors are Jason Kaufmann, Akshith Kachakayala, and Joshua Tanyi. Email them at jrk6273@psu.edu, avk6464@psu.edu, and jzt5756@psu.edu, respectively, with any questions.
