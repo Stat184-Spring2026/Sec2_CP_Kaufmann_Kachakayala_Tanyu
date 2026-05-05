@@ -39,7 +39,165 @@ All data in this report comes from a study presented by Cortez et al. in 2009. T
 
 ### Similar Characteristics
 
+#### Introduction
+
+Some of the measured properties from the dataset are closely similar between both red and white wines. Without close investigation and analysis, we can easily make mistakes in which type of wine we are analysing which is why we will go in detail and closely analyze similar characteristics between both wines using analytical methods.
+
+```{r}
+#| label: tbl-similar-wine
+#| tbl-cap: "Descriptive Statistics for pH and Alcohol showing similarities in Red and White Wine"
+#| echo: false
+
+#AUTHORS: JASON K. and JOSHUA T.
+### Creating a Table of Descriptive Statistics that Contrasts Red and White Wine
+## Step 1: Load necessary packages----
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(janitor)
+## Step 2: Load the data----
+redWineData <- 
+  read.csv(file = "~/Desktop/wine+quality/winequality-red.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+whiteWineData <- 
+  read.csv(file = "~/Desktop/wine+quality/winequality-white.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+## Step 3: Tidy the data for each type of wine----
+redWineProgress <- redWineData |>
+  rename( # Add descriptive column names
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as red wine
+    color = "red" 
+  )
+
+whiteWineProgress <- whiteWineData |>
+  rename(
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as white wine
+    color = "white"
+  )
+
+## Step 4: Bind the dataframes for red and white wine----
+wineData <- bind_rows(redWineProgress, whiteWineProgress)
+
+
+wineSummary <- wineData |>
+  group_by(color) |> # all subsequent operations will be performed for each color
+  group_by(color) |> 
+  summarise(
+    minPH = min(pH, na.rm = TRUE),
+    maxPH = max(pH, na.rm = TRUE),
+    avgPH = mean(pH, na.rm = TRUE),
+    medianPH = median(pH, na.rm = TRUE),
+    stdevPH = sd(pH, na.rm = TRUE),
+    
+    minAlcohol = min(Alcohol, na.rm = TRUE),
+    maxAlcohol = max(Alcohol, na.rm = TRUE),
+    avgAlcohol = mean(Alcohol, na.rm = TRUE),
+    medianAlcohol = median(Alcohol, na.rm = TRUE),
+    stdevAlcohol = sd(Alcohol, na.rm = TRUE)
+  )
+longWineStats <- wineSummary |>
+  rename(
+    'Color' = color,
+    'Min pH' = minPH,
+    'Max pH' = maxPH,
+    'Average pH' = avgPH,
+    'Median pH' = medianPH,
+    'St Dev pH' = stdevPH,
+    'Min Alcohol (%)' = minAlcohol,
+    'Max Alcohol (%)' = maxAlcohol,
+    'Average Alcohol (%)' = avgAlcohol,
+    'Median Alcohol (%)' = medianAlcohol,
+    'St Dev Alcohol (%)' = stdevAlcohol
+  ) |>
+  select(-Color) |> # Remove the column containing the wine's color
+  round(3) |> # Only show three digits for each value
+  t() |> # Switch the rows and columns of the dataframe 
+  as.data.frame() |>
+  knitr::kable(
+    caption = 'Descriptive Statistics for pH and Alcohol Concentrations for Red and White Wine',
+    align = 'lcc', # Align the text
+    col.names = c('', 'Red Wine', 'White Wine')
+  ) |>
+  kable_classic(
+    lightable_options = 'striped' # Add light stripes to make the table more visually appealling
+  ) |>
+  footnote( # Add a footnote describing the data source
+    general = 'Data sourced from Cortez et al., 2009',
+    footnote_as_chunk = TRUE # Fit the format on one line
+  )
+longWineStats
+```
+
+@tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
+
+```{r}
+#| label: fig-similar-wine
+#| fig-cap: "Comparison of Mean pH and Alcohol Levels for Red and White Wine"
+#| fig-alt: "Faceted bar chart comparing mean pH and mean alcohol levels for red and white wines. The bars are similar in height, indicating similar averages."
+#| echo: false
+
+#AUTHOR: JOSHUA TANYI
+#Preparing the data for plotting
+similarVisualData <- wineData |>
+  select(color, pH, Alcohol) |>
+  pivot_longer(
+    cols = c(pH, Alcohol),
+    names_to = "Characteristic",
+    values_to = "Value"
+  ) |>
+  group_by(color, Characteristic) |>
+  summarise(
+    Average = mean(Value, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Plot showing similar values
+ggplot(similarVisualData, aes(x = color, y = Average, fill = color)) +
+  geom_col() +
+  facet_wrap(~ Characteristic, scales = "free_y") +
+  labs(
+    x = "Wine Type",
+    y = "Average Value",
+    fill = "Wine Type"
+  ) +
+  theme_minimal()
+```
+
+@fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
+
 ### Stark Contrasts
+
+One of the largest contrasts between the chemistry of red and white wine can be seen in their sulfur dioxide concentration. White wine has a larger interquartile range than red wine, with the latter showing consistently lower concentrations of the preservative. In fact, the 25th percentile for white wine is larger than the 75th percentile of the red wine dataset (see @fig-sulfurDioxideBoxplot. White wines are more likely to oxidize and spoil than red wines, which is why they require the addition of more sulfur dioxide to keep it fresh (Boulton et al., 1999).
 
 ```{r}
 #| label: fig-sulfurDioxideBoxplot
@@ -50,6 +208,7 @@ All data in this report comes from a study presented by Cortez et al. in 2009. T
 #| echo: false
 
 ### Creating a Boxplot of Total Sulfur Dioxide Concentration by Wine Color
+## AUTHOR: Jason Kaufmann
 ## Step 1: Load necessary packages----
 library(tidyverse)
 ## Step 2: Load the data----
@@ -129,6 +288,8 @@ sulfurDioxidePlot <- ggplot(
 sulfurDioxidePlot
 ```
 
+Volatile acidity (VA) and residual sugar concentrations are vastly different between red and white wine as well. The median VA in red wine is twice that of white wine, with the average for red wine being nearly twice as large as well (see @tbl-vAcidityrSugar). VA is associated with high levels of acetic acid and other compounds that can cause wine to spoil, which is why winemakers must closely monitor levels in red whine to make sure they do not rise too high (Kelly, 2019). Perhaps an even larger contrast can be seen when comparing the residual sugar concentrations between both wine types. The average concentration of residual sugar is over four times larger in white wine, and the median is over 150% larger in white wine too. However, it is important to note that the standard deviation is significantly larger for white wine. This implies that residual sugar levels are relatively consistent in red wine and show much less variation (see @tbl-vAcidityrSugar).
+
 ```{r}
 #| label: tbl-vAcidityrSugar
 #| tbl-cap: "Table of descriptive statistics for volatile acidity and residual sugar concentration in red and white wine"
@@ -137,6 +298,7 @@ sulfurDioxidePlot
 #| echo: false
 
 ### Creating a Table of Descriptive Statistics that Contrasts Red and White Wine
+## AUTHOR: Jason Kaufmann
 ## Step 1: Load necessary packages----
 library(tidyverse)
 library(knitr)
@@ -247,7 +409,108 @@ longWineStats
 
 ### Strongest Predictors of Quality
 
-Text
+One of the strongest predictors of wine quality that we identified is its alcohol content. After randomly selecting 1,000 wine samples of each color, we identified a moderate positive correlation between alcohol content and wine quality that was slightly stronger for red wine. Furthermore, each wine type had an extremely small p-value that shows the significant relationship between these two variables (see @fig-alcoholCorrelationPlot). One reason for this could be alcohol's role as a carrier of certain pleasurable aromas in some wines. Smells of citrus or herbs may be stronger in wines with a higher alcohol content, which could have affected the judges' assessment of its quality. A higher alcohol content has also been reported to cause a fuller, richer taste that people desire. A lower alcohol content has been linked to a lighter taste with less flavor, which is reflected in the positive correlation that we identified (Copestake, 2025).
+
+```{r}
+#| label: fig-alcoholCorrelationPlot
+#| fig-cap: "Scatterplot showing a moderate positive correlation between alcohol content and wine quality in both wine types"
+#| fig-alt: "Scatterplot showing a moderate positive correlation between alcohol content and wine quality in both wine types"
+#| fig-pos: "H"
+#| fig-width: 8
+#| echo: false
+
+### Creating a Scatterplot Showing the Correlation Between Alcohol and Quality
+## AUTHOR: Jason Kaufmann
+## Step 1: Load necessary packages----
+library(tidyverse)
+library(ggpubr)
+set.seed(14)
+## Step 2: Load the data----
+redWineData <- 
+  read.csv(file = "~/Desktop/PSU/Sophomore Year Spring Semester/Stat 184/wine+quality (1)/winequality-red.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+whiteWineData <- 
+  read.csv(file = "~/Desktop/PSU/Sophomore Year Spring Semester/Stat 184/wine+quality (1)/winequality-white.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+## Step 3: Tidy the data for each type of wine----
+redWineProgress <- redWineData |>
+  rename( # Add descriptive column names
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as red wine
+    color = "red" 
+  )
+
+whiteWineProgress <- whiteWineData |>
+  rename(
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as white wine
+    color = "white"
+  )
+
+## Step 4: Bind the dataframes for red and white wine----
+wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
+  filter(
+    between(
+      Alcohol,
+      quantile(Alcohol, 0.25) - 1.5 * IQR(Alcohol),
+      quantile(Alcohol, 0.75) + 1.5 * IQR(Alcohol)
+    )
+  ) |>
+  group_by(color) |> # Perform all subsequent operations for each color
+  slice_sample(n = 1000) # Take a random sample of 1000 wine samples of each color
+
+## Step 5: Create an informative plot----
+alcoholQualityPlot <- wineData |>
+  ggplot(
+    mapping = aes(
+      x = Alcohol,
+      y = Quality,
+      color = color)
+    ) + 
+ geom_jitter(alpha = 0.4, size = 0.8) +
+ geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
+ stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
+ scale_color_hue(direction = 1) +
+ labs( # Add descriptive titles and an informative subtitle and caption
+   title = "Correlation Between Alcohol Content and Quality of Wine",
+   subtitle = "Random sample of 2,000 wine samples with 1,000 of each color",
+   x = "Alcohol Content (vol.%)",
+   y = "Quality",
+   caption = "Data source: Cortez et al., 2009"
+ ) +
+ theme_minimal() +
+ theme(legend.position = "bottom") # Position the legend below the graph
+
+alcoholQualityPlot
+```
 
 ### Weakest Predictors of Quality
 
@@ -267,19 +530,16 @@ Text
 
 Text
 
-## Code Appendix
-
 ## Conclusion
 
-```{r}
-1 + 1
-```
+{{< pagebreak >}}
 
-You can add options to executable code like this
+## Code Appendix (IMPORTANT: ECHO NEEDS TO BE SET TO TRUE BEFORE SUBMITTING. I set it to false since we're still editing the file and it will be a hassle to see such a large chunk of code in the document while editing. Edit can only be made in qmd file.)
 
 ```{r}
+#| label: codeAppend
+#| ref-label: !expr knitr::all_labels()
 #| echo: false
-2 * 2
-```
+#| eval: false
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```
