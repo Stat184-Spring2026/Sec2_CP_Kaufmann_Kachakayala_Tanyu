@@ -16,7 +16,9 @@ format:
     link-external-newwindow: true
     code-overflow: wrap
 execute: 
+  echo: false
   warning: false
+  message: false
 ---
 
 ## Introduction
@@ -50,7 +52,7 @@ Some of the measured properties from the dataset are closely similar between bot
 ```{r}
 #| label: tbl-similar-wine
 #| tbl-cap: "Descriptive Statistics for pH and Alcohol showing similarities in Red and White Wine"
-#| echo: false
+ 
 
 #AUTHORS: JASON K. and JOSHUA T.
 ### Creating a Table of Descriptive Statistics that Contrasts Red and White Wine
@@ -61,12 +63,12 @@ library(kableExtra)
 library(janitor)
 ## Step 2: Load the data----
 redWineData <- 
-  read.csv(file = "~/Desktop/wine+quality/winequality-red.csv",
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
            header = FALSE,
            sep = ";",
            skip = 1) # Omit the first row of column titles when importing data
 whiteWineData <- 
-  read.csv(file = "~/Desktop/wine+quality/winequality-white.csv",
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
            header = FALSE,
            sep = ";",
            skip = 1) # Omit the first row of column titles when importing data
@@ -164,13 +166,11 @@ longWineStats
 
 @tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
 
-@tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
-
 ```{r}
 #| label: fig-similar-wine
 #| fig-cap: "Comparison of Mean pH and Alcohol Levels for Red and White Wine"
 #| fig-alt: "Faceted bar chart comparing mean pH and mean alcohol levels for red and white wines. The bars are similar in height, indicating similar averages."
-#| echo: false
+ 
 
 #AUTHOR: JOSHUA TANYI
 #Preparing the data for plotting
@@ -198,8 +198,6 @@ ggplot(similarVisualData, aes(x = color, y = Average, fill = color)) +
   ) +
   theme_minimal()
 ```
-
-@fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
 
 @fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
 
@@ -250,7 +248,7 @@ Volatile acidity (VA) and residual sugar concentrations are vastly different bet
 #| tbl-cap: "Table of descriptive statistics for volatile acidity and residual sugar concentration in red and white wine"
 #| tbl-pos: "H"
 #| html-table-processing: none
-#| echo: false
+ 
 
 ### Creating a Table of Descriptive Statistics that Contrasts Red and White Wine
 ## AUTHOR: Jason Kaufmann
@@ -296,10 +294,11 @@ longWineStats <- wineSummary |>
   knitr::kable(
     caption = 'Descriptive Statistics for Volatile Acidity and Residual Sugar Concentrations for Red and White Wine',
     align = 'lcc', # Align the text
-    col.names = c('', 'Red Wine', 'White Wine')
+    col.names = c('Attribute (units)', 'Red Wine', 'White Wine')
   ) |>
-  kable_classic(
-    lightable_options = 'striped' # Add light stripes to make the table more visually appealling
+  kable_styling(
+    latex_options = c("striped", "hold_position"),
+    full_width = FALSE
   ) |>
   footnote( # Add a footnote describing the data source
     general = 'Data sourced from Cortez et al., 2009',
@@ -309,6 +308,135 @@ longWineStats
 ```
 
 ## Correlates of Quality
+
+```{r}
+#| label: tbl-correlation-table
+#| tbl-cap: "Correlation Coefficient between Wine Characteristics and Quality for Red and White Wines"
+#| tbl-pos: "H"
+#| html-table-processing: none
+ 
+
+### Creating a Table of Descriptive Statistics that Contrasts Red and White Wine
+## AUTHOR: Akshith Kachakayala
+## Step 1: Load necessary packages----
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+set.seed(14)
+### Step 3: Read in the red and white wine dataset.
+redWineData <- read.csv(
+  file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
+  header = FALSE,
+  sep = ";",
+  skip = 1
+)
+
+whiteWineData <- read.csv(
+  file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
+  header = FALSE,
+  sep = ";",
+  skip = 1
+)
+## Step 5: Create consistent column names for both datasets.
+column_names <- c(
+  "Fixed.Acidity",
+  "Volatile.Acidity",
+  "Citric.Acid",
+  "Residual.Sugar",
+  "Chlorides",
+  "Free.Sulfur.Dioxide",
+  "Total.Sulfur.Dioxide",
+  "Density",
+  "pH",
+  "Sulphates",
+  "Alcohol",
+  "Quality"
+)
+
+names(redWineData) <- column_names
+
+names(whiteWineData) <- column_names
+
+redWineProgress <- redWineData |>## Add a color variable to identify whether each observation is red or white wine.
+  mutate(color = "red")
+
+whiteWineProgress <- whiteWineData |>
+  mutate(color = "white")
+
+wineData <- bind_rows(redWineProgress, whiteWineProgress)
+
+characteristics <- c(#List the wine characteristics to compare with quality.
+  "Fixed.Acidity",
+  "Volatile.Acidity",
+  "Citric.Acid",
+  "Residual.Sugar",
+  "Chlorides",
+  "Free.Sulfur.Dioxide",
+  "Total.Sulfur.Dioxide",
+  "Density",
+  "pH",
+  "Sulphates",
+  "Alcohol"
+)
+
+get_r_values <- function(characteristic) {#removes outliers for the selected characteristic using the 1.5 IQR rule
+  sampledData <- wineData |>
+    filter(
+      between(
+        .data[[characteristic]],
+        quantile(.data[[characteristic]], 0.25) - 1.5 * IQR(.data[[characteristic]]),
+        quantile(.data[[characteristic]], 0.75) + 1.5 * IQR(.data[[characteristic]])
+      )
+    ) |>
+    group_by(color) |>
+    slice_sample(n = 1000) |>
+
+    ungroup()
+  sampledData |>
+    group_by(color) |>
+    summarize(
+      r_value = cor(
+        .data[[characteristic]],
+        Quality,
+        method = "pearson",
+        use = "complete.obs"
+                ),
+      .groups = "drop"
+    ) |>
+    mutate(characteristic = characteristic) |>
+    select(characteristic, color, r_value)
+}
+r_values_long <- map_dfr(characteristics, get_r_values)#Run the correlation function for every wine characteristic.
+r_values_table <- r_values_long |>
+  pivot_wider(#red and white wine correlations appear in separate columns
+    names_from = color,
+    values_from = r_value,
+    names_prefix = "r_"
+  ) |>
+  mutate(
+    characteristic = str_replace_all(characteristic, "\\.", " "),
+    r_red = round(r_red, 3),
+    r_white = round(r_white, 3)
+  )
+knitr::kable(
+  r_values_table,
+  caption = "Correlation Coefficient between Wine Characteristics and Quality for Red and White Wines",
+  align = "lcc",
+  col.names = c("Characteristics", "R value of Red Wine", "R value of White Wine"),
+  escape = FALSE
+) |>
+  kable_styling(
+    latex_options = c("striped", "hold_position"),
+    full_width = FALSE
+  ) |>
+  footnote(
+    general = "Data sourced from Cortez et al., 2009",
+    footnote_as_chunk = TRUE
+  )
+```
+<!--Authored by Akshith Kachakayala-->
+Correlation coefficients were calculated for red and white wines (see @tbl-correlation-table) to determine which of the characteristics from the dataset associate the most with wine quality. These coefficients measure the strength of the relationship between a wine characteristic and the quality rating. Outliers were also removed using the 1.5 IQR rule, and 1,000 observations were sampled from each wine type for consistency. This comparison helps reveal whether the same attributes are associated with quality in similar ways across red and white wines. 
 
 ### Strongest Predictors of Quality
 
@@ -349,7 +477,7 @@ alcoholQualityPlot <- wineData |>
       y = Quality,
       color = color)
     ) + 
- geom_jitter(alpha = 0.4, size = 0.8) +
+ geom_jitter(alpha = 0.4, size = 0.7) +
  geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
  stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
  scale_color_hue(direction = 1) +
@@ -366,38 +494,237 @@ alcoholQualityPlot <- wineData |>
 alcoholQualityPlot
 ```
 
-### Weakest Predictors of Quality
 
-Text
+### Weakest Predictors of Quality
+<!--Authored by Akshith Kachakayala-->
+We have identified that the weakest predictors of wine quality is the Free Sulfur Dioxide Content. After randomly selecting 1,000 wine samples of each color and removing outliers based off a 1.5 IQR rule, we noticed a weak correlation between alcohol content and wine quality. One possible reason could be that sulfur dioxide acts as a preservative rather than as a direct contributor to flavor. Regular levels protects wine from oxidation but extremely high or low levels may have adverse effects on taste or smell. As seen in @fig-FreeSO2CorrelationPlot, the correlation suggests that while Free Sulfur Dioxide Content can vary greatly in both wine types, the quality remains relatively stable.
+
+```{r}
+#| label: fig-FreeSO2CorrelationPlot
+#| fig-cap: "Scatterplot showing a Weak Correlation between Free Sulfur Dioxide and Wine Quality in both Wine Types"
+#| fig-alt: "Scatterplot showing a Weak Correlation between Free Sulfur Dioxide and Wine Quality in both Wine Types"
+#| fig-pos: "H"
+#| fig-width: 8
+ 
+### Creating a Scatterplot Showing the Correlation Between Free Sulfur Dioxide and Quality
+## AUTHOR: Akshith Kachakayala
+## Step 1: Load necessary packages----
+library(tidyverse)
+library(ggpubr)
+set.seed(14)
+## Step 2: Load the data----
+redWineData <- 
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+whiteWineData <- 
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+## Step 3: Tidy the data for each type of wine----
+redWineProgress <- redWineData |>
+  rename( # Add descriptive column names
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as red wine
+    color = "red" 
+  )
+
+whiteWineProgress <- whiteWineData |>
+  rename(
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as white wine
+    color = "white"
+  )
+
+## Step 4: Bind the dataframes for red and white wine----
+wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
+  filter(
+    between(
+      Free.Sulfur.Dioxide,
+      quantile(Free.Sulfur.Dioxide, 0.25) - 1.5 * IQR(Free.Sulfur.Dioxide),
+      quantile(Free.Sulfur.Dioxide, 0.75) + 1.5 * IQR(Free.Sulfur.Dioxide)
+    )
+  ) |>
+  group_by(color) |> # Perform all subsequent operations for each color
+  slice_sample(n = 1000) # Take a random sample of 1,000 wine samples of each color
+
+## Step 5: Create an informative plot----
+FreeSulfurDioxideQualityPlot <- wineData |>
+  
+  ggplot(
+    mapping = aes(
+      x = Free.Sulfur.Dioxide,
+      y = Quality,
+      color = color)
+  ) + 
+  geom_jitter(alpha = 0.4, size = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
+  stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
+  scale_color_hue(direction = 1) +
+  labs( # Add descriptive titles and an informative subtitle and caption
+    title = "Correlation Between Free Sulfur Dioxide Concentration and Quality of Wine",
+    subtitle = "Random sample of 2,000 wine samples with 1,000 of each color",
+    x = expression("Free Sulfur Dioxide Concentration (mg/dm"^3*")"),
+    y = "Quality",
+    caption = "Data source: Cortez et al., 2009"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") # Position the legend below the graph
+
+FreeSulfurDioxideQualityPlot
+```
 
 ### Varying Predictors of Quality by Color
+@fig-sulphates-quality shows the relationship between sulphate concentration and wine quality for red and white wines. We selected 1000 samples and filtered outliers based off the 1.5 IQR rules. The trend lines indicate opposite relationships between the two wine types. For red wine, sulphate concentration has a weak positive correlation with quality, suggesting that higher sulphate levels are associated with slightly higher quality scores. In contrast, white wine shows a weak negative correlation, indicating that increasing sulphate concentration is associated with slightly lower quality scores. However, the wide spread of points suggests that sulphate concentration alone is not a strong predictor of wine quality for either wine type and there are other variabkles which need to be measured alongside Sulphate concentration to get a useful quality score between the two.
 
-Text
+```{r}
+#| label: fig-sulphates-quality
+#| fig-cap: "Relationship Between Sulphate Concentration and Wine Quality"
+#| fig-alt: 'Scatterplot showing sulphate concentration on the x-axis and wine quality on the y-axis for red and white wines showing variation between red and whte wines'
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-pos: "H"
+#| fig-width: 8
+
+#JOSHUA TANYI, JASON K, AKSHITH
+### Creating a Scatterplot Showing the Correlation Between Sulphates and Quality
+## Step 1: Load necessary packages----
+library(tidyverse)
+library(ggpubr)
+set.seed(14)
+## Step 2: Load the data----
+redWineData <- 
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+whiteWineData <- 
+  read.csv(file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-white.csv",
+           header = FALSE,
+           sep = ";",
+           skip = 1) # Omit the first row of column titles when importing data
+## Step 3: Tidy the data for each type of wine----
+redWineProgress <- redWineData |>
+  rename( # Add descriptive column names
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as red wine
+    color = "red" 
+  )
+
+whiteWineProgress <- whiteWineData |>
+  rename(
+    "Fixed.Acidity" = V1,
+    "Volatile.Acidity" = V2,
+    "Citric.Acid" = V3,
+    "Residual.Sugar" = V4,
+    "Chlorides" = V5,
+    "Free.Sulfur.Dioxide" = V6,
+    "Total.Sulfur.Dioxide" = V7,
+    "Density" = V8,
+    "pH" = V9,
+    "Sulphates" = V10,
+    "Alcohol" = V11,
+    "Quality" = V12
+  ) |>
+  mutate( # Create a column to label each sample as white wine
+    color = "white"
+  )
+
+## Step 4: Bind the dataframes for red and white wine----
+wineData <- bind_rows(redWineProgress, whiteWineProgress) |> # Join the dataframes
+  filter(
+    between(
+      Sulphates,
+      quantile(Sulphates, 0.25) - 1.5 * IQR(Sulphates),
+      quantile(Sulphates, 0.75) + 1.5 * IQR(Sulphates)
+    )
+  ) |>
+  group_by(color) |> # Perform all subsequent operations for each color
+  slice_sample(n = 1000) # Take a random sample of 1000 wine samples of each color
+
+
+## Step 5: Create an informative plot----
+sulphatesQualityPlot <- wineData |>
+  ggplot(
+    mapping = aes(
+      x = Sulphates,
+      y = Quality,
+      color = color)
+  ) + 
+  geom_jitter(alpha = 0.4, size = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) + # Add a linear trendline
+  stat_cor(method = "pearson") + # Add Pearson's correlation coefficient for each color
+  scale_color_hue(direction = 1) +
+  labs( # Add descriptive titles and an informative subtitle and caption
+    title = "Correlation Between Sulphate Concentration and Quality of Wine",
+    subtitle = "Random sample of 2,000 wine samples with 1,000 of each color",
+    x = "Sulphate Concentration (g(potassium sulphate)/dm3)",
+    y = "Quality",
+    caption = "Data source: Cortez et al., 2009"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") # Position the legend below the graph
+
+sulphatesQualityPlot
+```
 
 ## Conclusion
 
 ### Takeaways
-
-Text
+<!--Authored by Akshith Kachakayala-->
+In this analysis the data shows that red and white wines have different chemical profiles. Red and white wines vary in their levels of volatile acidity plus residual sugar but they are similar in their pH and alcohol content. Alcohol is a clear factor that relates to quality for both types of wine. It is evident in this dataset that wines with more alcohol receive higher ratings for quality. By contrast free sulfur dioxide has a weak relationship with quality, because free sulfur dioxide preserves wine and makes it stable but it does not directly make wine taste or smell better. As those results indicate, one chemical feature does not determine the quality of wine. For a wine to be high quality, it must have a specific balance of many characteristics. And the effects of the characteristics are different when one compares red wines to white wines.
 
 ### Next Steps
 
 Text
 
-## Conclusion
-
 {{< pagebreak >}}
 
-## Conclusion
 
-{{< pagebreak >}}
-
-## Code Appendix (IMPORTANT: ECHO NEEDS TO BE SET TO TRUE BEFORE SUBMITTING. I set it to false since we're still editing the file and it will be a hassle to see such a large chunk of code in the document while editing. Edit can only be made in qmd file.)
-
+## Code Appendix
 ```{r}
 #| label: codeAppend
 #| ref-label: !expr knitr::all_labels()
-#| echo: false
+#| echo: true
 #| eval: false
 
 ```
