@@ -33,7 +33,11 @@ Although most people have an allegiance to either red or white wine, few are fam
 
 ### The Dataset
 
-All data in this report comes from a study presented by Cortez et al. in 2009. The period of data collection was from May of 2004 to February of 2007. 1,599 samples of red wine and 4,898 samples of white wine were analyzed, with the chemical characteristics of each being determined by the iLab software. Each wine sample was tasted and evaluated by three qualified judges who rated it on a scale of one to ten (with ten being the highest quality and one being the lowest quality). These findings were summarized into two csv files: one for red wine and one for white wine (Cortez et al., 2009).
+All data in this report comes from a study presented by Cortez et al. in 2009. The period of data collection was from May of 2004 to February of 2007, and each case is a wine sample. 1,599 samples of red wine and 4,898 samples of white wine were analyzed, with the chemical characteristics of each being determined by the iLab software.
+
+The researchers measured each sample's acidity through two different variables: fixed acidity and volatile acidity. Fixed acidity is measured in units of grams of tartaric acid per cubic decimeter, while volatile acidity is measured in grams of acetic acid per cubic decimeter. These variables measure the concentration of different acids, with tartaric acid causing a typical sour taste and acetic acid being more bitter and unpleasant. Citric acid concentration was measured in units of grams per cubic decimeter and, unlike tartaric or acetic acid, is used to produce a balanced, fresh taste. Furthermore, the concentration of chlorides was measured (in grams of NaCl per cubic decimeter) because more chloride ions in wine can cause a foul smell and salty taste. The free sulfur dioxide and total sulfur dioxide concentrations were measured (in mg per cubic decimeter), with free sulfur dioxide measuring the subset of total sulfur dioxide that can protect the wine from spoiling and bacteria. The density of the wine was measured in grams per cubic centimeter, and the pH was recorded as well to gauge the wine's acidity. Sulphate is another preservative added to wine to maintain its freshness, and its concentrations were observed in units of grams of potassium sulfate per cubic decimeter. The percent volume of alcohol was measured as well.
+
+Each wine sample was tasted and evaluated by three qualified judges who rated it on a scale of one to ten (with ten being the highest quality and one being the lowest quality). These findings were summarized into two csv files: one for red wine and one for white wine (Cortez et al., 2009).
 
 ## Wine Chemistry by Color
 
@@ -160,8 +164,8 @@ longWineStats
 
 @tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
 
- @tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
- 
+@tbl-similar-wine summarizes the minimum, maximum, mean, median, and standard deviation for pH and alcohol content in red and white wines. The results show that both variables have very similar mean values, with only small differences between the two wine types. The similarity in median and variability further supports that pH and alcohol are consistent characteristics across red and white wines, especially when compared to other variables that show greater variation.
+
 ```{r}
 #| label: fig-similar-wine
 #| fig-cap: "Comparison of Mean pH and Alcohol Levels for Red and White Wine"
@@ -198,8 +202,6 @@ ggplot(similarVisualData, aes(x = color, y = Average, fill = color)) +
 @fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
 
 @fig-similar-wine visually reinforces this pattern by showing the mean values of pH and alcohol for each wine type. The bars for red and white wines are nearly equal in height in both panels, highlighting the similarity in average values. Overall, these results suggest that pH and alcohol are consistent characteristics across wine types and are less useful for distinguishing between red and white wines compared to other variables.
-
-
 
 ### Stark Contrasts
 
@@ -306,7 +308,6 @@ longWineStats <- wineSummary |>
 longWineStats
 ```
 
-
 ## Correlates of Quality
 
 ### Strongest Predictors of Quality
@@ -389,7 +390,7 @@ Text
 
 ## Conclusion
 
-{{< pagebreak >}}  
+{{< pagebreak >}}
 
 ## Code Appendix (IMPORTANT: ECHO NEEDS TO BE SET TO TRUE BEFORE SUBMITTING. I set it to false since we're still editing the file and it will be a hassle to see such a large chunk of code in the document while editing. Edit can only be made in qmd file.)
 
