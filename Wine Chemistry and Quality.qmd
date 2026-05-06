@@ -321,7 +321,7 @@ library(knitr)
 library(kableExtra)
 
 set.seed(14)
-
+### Step 3: Read in the red and white wine dataset.
 redWineData <- read.csv(
   file = "~/Desktop/Stat184/Sec2_CP_Kaufmann_Kachakayala_Tanyu/winequality-red.csv",
   header = FALSE,
@@ -335,7 +335,7 @@ whiteWineData <- read.csv(
   sep = ";",
   skip = 1
 )
-
+## Step 5: Create consistent column names for both datasets.
 column_names <- c(
   "Fixed.Acidity",
   "Volatile.Acidity",
@@ -355,7 +355,7 @@ names(redWineData) <- column_names
 
 names(whiteWineData) <- column_names
 
-redWineProgress <- redWineData |>
+redWineProgress <- redWineData |>## Add a color variable to identify whether each observation is red or white wine.
   mutate(color = "red")
 
 whiteWineProgress <- whiteWineData |>
@@ -363,7 +363,7 @@ whiteWineProgress <- whiteWineData |>
 
 wineData <- bind_rows(redWineProgress, whiteWineProgress)
 
-characteristics <- c(
+characteristics <- c(#List the wine characteristics to compare with quality.
   "Fixed.Acidity",
   "Volatile.Acidity",
   "Citric.Acid",
@@ -377,7 +377,7 @@ characteristics <- c(
   "Alcohol"
 )
 
-get_r_values <- function(characteristic) {
+get_r_values <- function(characteristic) {#removes outliers for the selected characteristic using the 1.5 IQR rule
   sampledData <- wineData |>
     filter(
       between(
@@ -404,9 +404,9 @@ get_r_values <- function(characteristic) {
     mutate(characteristic = characteristic) |>
     select(characteristic, color, r_value)
 }
-r_values_long <- map_dfr(characteristics, get_r_values)
+r_values_long <- map_dfr(characteristics, get_r_values)#Run the correlation function for every wine characteristic.
 r_values_table <- r_values_long |>
-  pivot_wider(
+  pivot_wider(#red and white wine correlations appear in separate columns
     names_from = color,
     values_from = r_value,
     names_prefix = "r_"
