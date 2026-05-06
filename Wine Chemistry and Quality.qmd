@@ -709,13 +709,9 @@ sulphatesQualityPlot
 
 ## Conclusion
 
-### Takeaways
 <!--Authored by Akshith Kachakayala-->
 In this analysis the data shows that red and white wines have different chemical profiles. Red and white wines vary in their levels of volatile acidity plus residual sugar but they are similar in their pH and alcohol content. Alcohol is a clear factor that relates to quality for both types of wine. It is evident in this dataset that wines with more alcohol receive higher ratings for quality. By contrast free sulfur dioxide has a weak relationship with quality, because free sulfur dioxide preserves wine and makes it stable but it does not directly make wine taste or smell better. As those results indicate, one chemical feature does not determine the quality of wine. For a wine to be high quality, it must have a specific balance of many characteristics. And the effects of the characteristics are different when one compares red wines to white wines.
 
-### Next Steps
-
-Text
 
 {{< pagebreak >}}
 
