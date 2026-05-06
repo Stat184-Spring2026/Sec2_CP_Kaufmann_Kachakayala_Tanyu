@@ -35,7 +35,11 @@ Although most people have an allegiance to either red or white wine, few are fam
 
 ### The Dataset
 
-All data in this report comes from a study presented by Cortez et al. in 2009. The period of data collection was from May of 2004 to February of 2007. 1,599 samples of red wine and 4,898 samples of white wine were analyzed, with the chemical characteristics of each being determined by the iLab software. Each wine sample was tasted and evaluated by three qualified judges who rated it on a scale of one to ten (with ten being the highest quality and one being the lowest quality). These findings were summarized into two csv files: one for red wine and one for white wine (Cortez et al., 2009).
+All data in this report comes from a study presented by Cortez et al. in 2009. The period of data collection was from May of 2004 to February of 2007, and each case is a wine sample. 1,599 samples of red wine and 4,898 samples of white wine were analyzed, with the chemical characteristics of each being determined by the iLab software.
+
+The researchers measured each sample's acidity through two different variables: fixed acidity and volatile acidity. Fixed acidity is measured in units of grams of tartaric acid per cubic decimeter, while volatile acidity is measured in grams of acetic acid per cubic decimeter. These variables measure the concentration of different acids, with tartaric acid causing a typical sour taste and acetic acid being more bitter and unpleasant. Citric acid concentration was measured in units of grams per cubic decimeter and, unlike tartaric or acetic acid, is used to produce a balanced, fresh taste. Furthermore, the concentration of chlorides was measured (in grams of NaCl per cubic decimeter) because more chloride ions in wine can cause a foul smell and salty taste. The free sulfur dioxide and total sulfur dioxide concentrations were measured (in mg per cubic decimeter), with free sulfur dioxide measuring the subset of total sulfur dioxide that can protect the wine from spoiling and bacteria. The density of the wine was measured in grams per cubic centimeter, and the pH was recorded as well to gauge the wine's acidity. Sulphate is another preservative added to wine to maintain its freshness, and its concentrations were observed in units of grams of potassium sulfate per cubic decimeter. The percent volume of alcohol was measured as well.
+
+Each wine sample was tasted and evaluated by three qualified judges who rated it on a scale of one to ten (with ten being the highest quality and one being the lowest quality). These findings were summarized into two csv files: one for red wine and one for white wine (Cortez et al., 2009).
 
 ## Wine Chemistry by Color
 
@@ -302,7 +306,6 @@ longWineStats <- wineSummary |>
   )
 longWineStats
 ```
-
 
 ## Correlates of Quality
 
@@ -714,7 +717,7 @@ In this analysis the data shows that red and white wines have different chemical
 
 Text
 
-{{< pagebreak >}}  
+{{< pagebreak >}}
 
 
 ## Code Appendix
